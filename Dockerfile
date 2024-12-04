@@ -15,9 +15,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copy project files
-COPY project project
-COPY build.sbt .
-COPY src src
+COPY . .
 
 # Set SBT_OPTS to limit memory usage
 ENV SBT_OPTS="-Xmx256m -Xms64m"
@@ -29,6 +27,6 @@ RUN sbt clean compile stage
 EXPOSE 9000
 
 # Command to run the application with memory constraints
-CMD ["target/universal/stage/bin/scala-backend", "-Dconfig.resource=production.conf"]
+CMD target/universal/stage/bin/scala-backend
 
-ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
+#ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
