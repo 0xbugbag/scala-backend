@@ -1,5 +1,5 @@
+import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
-import com.typesafe.sbt.packager.Keys._
 
 lazy val akkaHttpVersion = "10.2.10"
 lazy val akkaVersion    = "2.6.20"
@@ -42,9 +42,9 @@ lazy val root = (project in file(".")).
     Revolver.settings,
 
     // Docker settings
-    Docker / packageName := "your-app-name",
+    Docker / packageName := "scala-backend",
     Docker / version := "latest",
-    Docker / maintainer := "your@email.com",
+    Docker / maintainer := "0xpotchgen.ui@gmail.com",
 
     // Force the server to bind to 0.0.0.0
     run / fork := true,
