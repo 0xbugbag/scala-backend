@@ -56,3 +56,8 @@ lazy val root = (project in file(".")).
       s"-Dplay.server.http.port=${sys.env.getOrElse("PORT", "9000")}"
     )
   )
+
+// Ensure clean state
+onLoad in Global := (onLoad in Global).value andThen { state =>
+  "clean" :: state
+}
