@@ -38,6 +38,14 @@ lazy val root = (project in file(".")).
       "-Xmx256m",
       "-Xms64m"
     ),
+    // Revolver settings
+    Revolver.settings,
+
+    // Docker settings
+    Docker / packageName := "your-app-name",
+    Docker / version := "latest",
+    Docker / maintainer := "your@email.com",
+
     // Force the server to bind to 0.0.0.0
     run / fork := true,
     
