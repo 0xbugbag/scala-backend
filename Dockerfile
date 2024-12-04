@@ -28,3 +28,5 @@ EXPOSE 9000
 
 # Command to run the application with memory constraints
 CMD ["sbt", "-J-Xmx256m", "-J-Xms64m", "run"]
+
+ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
