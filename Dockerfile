@@ -1,26 +1,27 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+FROM openjdk:11-jre-slim
 
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the local code to the container
-COPY . /app
-
-# Install necessary dependencies for sbt
-RUN apt-get update && apt-get install -y curl gnupg
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add the sbt repository and install sbt from the official repository
-RUN echo "deb https://repo.scala-sbt.org/sbt/debian/ /" | tee -a /etc/apt/sources.list.d/sbt.list \
+RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list \
     && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2E7489F70127B2F7" | tee /etc/apt/trusted.gpg.d/sbt.asc \
     && apt-get update \
     && apt-get install -y sbt
 
-# Build the Scala application using sbt
-RUN sbt clean compile
+# Copy your Scala project files
+COPY . /app
+WORKDIR /app
 
-# Run the application
-CMD ["sbt", "run"]
+# Build your Scala project
+RUN sbt compile
 
-# Expose the port your application will listen on
+# Expose the port your application runs on
 EXPOSE 8080
+
+# Command to run your application
+CMD ["sbt", "run"]
