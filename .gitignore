@@ -1,0 +1,23 @@
+# .gitignore for Scala projects
+
+*.class
+.idea
+target/
+.bsp
+
+# sbt-specific
+target/
+.idea/
+.cache/
+*.log
+
+# IntelliJ IDEA
+*.iml
+.idea/
+
+# VSCode
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
