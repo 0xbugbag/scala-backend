@@ -15,7 +15,7 @@ lazy val root = (project in file("."))
     )),
     name := "scala-backend",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-library" % scalaVersion.value,
+      "org.scala-lang" % "scala-library" % "2.13.8",
       "com.typesafe.akka" %% "akka-http"                % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json"     % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-actor-typed"         % akkaVersion,
