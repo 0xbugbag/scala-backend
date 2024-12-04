@@ -1,19 +1,27 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:11
 
-RUN apt-get update && apt-get install -y curl gnupg && \
-    curl -fL "https://github.com/sbt/sbt/releases/download/v1.8.2/sbt-1.8.2.tgz" | tar xz -C /usr/local && \
+# Install curl and other dependencies
+RUN apt-get update && \
+    apt-get install -y curl gnupg && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list && \
+    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add && \
+    apt-get update && \
+    apt-get install -y sbt && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy your Scala project files
-COPY . /app
+# Set working directory
 WORKDIR /app
 
-# Build your Scala project
+# Copy project files
+COPY . .
+
+# Build the project
 RUN sbt clean compile
 
-# Expose the port your application runs on
-EXPOSE 8080
+# Expose port if needed
+EXPOSE 9000
 
-# Command to run your application
+# Run the application
 CMD ["sbt", "run"]
