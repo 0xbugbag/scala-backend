@@ -1,7 +1,7 @@
 package com.example
 
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}  // Add these imports
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Route
 import scala.concurrent.Future
 import com.example.UserRegistry._
@@ -9,10 +9,16 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.util.Timeout
+import spray.json.DefaultJsonProtocol._
+import spray.json.RootJsonFormat
 
 class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val system: ActorSystem[_]) extends CorsHandler {
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
   import JsonFormats._
+
+  // Add this for health check response
+  final case class HealthResponse(status: String, timestamp: String)
+  implicit val healthResponseFormat: RootJsonFormat[HealthResponse] = jsonFormat2(HealthResponse)
   
   private implicit val timeout: Timeout = 
     Timeout.create(system.settings.config.getDuration("my-app.routes.ask-timeout"))
@@ -59,7 +65,7 @@ class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val syst
       // Health check
       path("health") {
         get {
-          complete(StatusCodes.OK -> Map("status" -> "UP", "timestamp" -> java.time.Instant.now.toString))
+          complete(HealthResponse("UP", java.time.Instant.now.toString))
         }
       },
       // Users routes
