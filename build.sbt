@@ -22,14 +22,15 @@ lazy val root = (project in file("."))
       "com.typesafe.akka" %% "akka-stream"              % akkaVersion,
       "ch.qos.logback"    % "logback-classic"           % "1.4.11",
 
-      // Specify the main class here
-      Compile / mainClass := Some("com.example.Main"),  // Replace with your actual main class
-
       // Test dependencies
       "com.typesafe.akka" %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion     % Test,
       "org.scalatest"     %% "scalatest"                % "3.2.17"        % Test
       ),
+
+      // Specify the main class here
+      Compile / mainClass := Some("com.example.Main"),  // Replace with your actual main class
+
       scalacOptions ++= Seq(
         "-deprecation",
         "-feature",
