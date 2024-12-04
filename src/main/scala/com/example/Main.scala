@@ -3,49 +3,45 @@ package com.example
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success}
 
-object Main extends App {
-  // Create ActorSystem with root behavior
-  val rootBehavior = Behaviors.setup[Nothing] { context =>
-    // Create UserRegistry actor
-    val userRegistryActor = context.spawn(UserRegistry(), "UserRegistryActor")
-    context.watch(userRegistryActor)
-
-    // Create UserRoutes instance
-    val userRoutes = new UserRoutes(userRegistryActor)(context.system)
-    val routes = userRoutes.userRoutes
-
-    implicit val system = context.system
+object Main {
+  private def startHttpServer(routes: UserRoutes)(implicit system: ActorSystem[_]): Unit = {
+    // Needed for the Future and other things
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
-    // Starting the server
     val host = "0.0.0.0"
     val port = sys.env.getOrElse("PORT", "9000").toInt
     
-    val bindingFuture = Http().newServerAt(host, port).bind(routes)
+    val futureBinding = Http().newServerAt(host, port).bind(routes.userRoutes)
 
-    bindingFuture.onComplete {
+    futureBinding.onComplete {
       case Success(binding) =>
         val address = binding.localAddress
-        context.log.info(s"Server online at http://${address.getHostString}:${address.getPort}/")
+        system.log.info("Server online at http://{}:{}/", address.getHostString, address.getPort)
       case Failure(ex) =>
-        context.log.error(s"Failed to bind HTTP server: ${ex.getMessage}")
-        context.system.terminate()
+        system.log.error("Failed to bind HTTP endpoint, terminating system", ex)
+        system.terminate()
     }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val rootBehavior = Behaviors.setup[Nothing] { context =>
+      val userRegistryActor = context.spawn(UserRegistry(), "UserRegistryActor")
+      context.watch(userRegistryActor)
+
+      val routes = new UserRoutes(userRegistryActor)(context.system)
+      startHttpServer(routes)(context.system)
+
+      Behaviors.empty
+    }
+
+    val system = ActorSystem[Nothing](rootBehavior, "scala-backend")
 
     // Add shutdown hook
     sys.addShutdownHook {
-      bindingFuture
-        .flatMap(_.unbind())
-        .onComplete(_ => system.terminate())
-      println("Shutting down server...")
+      system.terminate()
     }
-
-    Behaviors.empty
   }
-
-  // Start the ActorSystem
-  val system = ActorSystem[Nothing](rootBehavior, "scala-backend")
 }
