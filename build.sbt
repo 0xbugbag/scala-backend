@@ -1,7 +1,5 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
-import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
-import sbt.Keys._
 
 lazy val akkaHttpVersion = "10.2.10"
 lazy val akkaVersion    = "2.6.20"
@@ -9,7 +7,7 @@ lazy val akkaVersion    = "2.6.20"
 fork := true
 
 lazy val root = (project in file("."))
-  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .enablePlugins(JavaAppPackaging)
   .settings(
     inThisBuild(List(
       organization    := "com.example",
@@ -41,12 +39,6 @@ lazy val root = (project in file("."))
       "-Xmx256m",
       "-Xms64m"
     ),
-    // Revolver settings
-    Revolver.settings,
-
-      // Docker settings
-    Docker / containerPort := 9000,
-    Docker / version := "latest",
 
     // Force the server to bind to 0.0.0.0
     run / fork := true,
