@@ -11,12 +11,12 @@ lazy val root = (project in file("."))
   .settings(
     inThisBuild(List(
       organization    := "com.example",
-      scalaVersion    := "2.13.8"
+      scalaVersion    := "2.13.12"
     )),
     name := "scala-backend",
     libraryDependencies ++= Seq(
       "ch.megard" %% "akka-http-cors" % "1.2.0",
-      "org.scala-lang" % "scala-library" % "2.13.8",
+      "org.scala-lang" % "scala-library" % "2.13.12",
       "com.typesafe.akka" %% "akka-http"                % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-http-spray-json"     % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-actor-typed"         % akkaVersion,
