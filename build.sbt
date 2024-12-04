@@ -1,13 +1,15 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
+import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 
 lazy val akkaHttpVersion = "10.2.10"
 lazy val akkaVersion    = "2.6.20"
 
 fork := true
 
-lazy val root = (project in file(".")).
-  settings(
+lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
+  .settings(
     inThisBuild(List(
       organization    := "com.example",
       scalaVersion    := "2.13.8"
@@ -42,18 +44,17 @@ lazy val root = (project in file(".")).
     Revolver.settings,
 
       // Docker settings
-    dockerBaseImage := "openjdk:11-jdk-slim",
-    dockerExposedPorts ++= Seq(9000),
-    dockerUpdateLatest := true,
+    Docker / containerPort := 9000,
+    Docker / version := "latest",
 
     // Force the server to bind to 0.0.0.0
     run / fork := true,
     
-    // Production settings
-    bashScriptExtraDefines ++= Seq(
-      s"""addJava "-Dconfig.resource=production.conf"""",
-      s"""addJava "-Dhttp.port=${sys.env.getOrElse("PORT", "9000")}"""",
-      s"""addJava "-Dhttp.address=0.0.0.0""""
+     // Production settings
+    Universal / javaOptions ++= Seq(
+      "-Dconfig.resource=production.conf",
+      s"-Dhttp.port=${sys.env.getOrElse("PORT", "9000")}",
+      "-Dhttp.address=0.0.0.0"
     )
   )
 
