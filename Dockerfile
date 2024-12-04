@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:11-jdk-slim
 
 # Install curl and other dependencies
 RUN apt-get update && \
