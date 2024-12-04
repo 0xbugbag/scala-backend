@@ -11,9 +11,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install sbt
-RUN curl -L "https://github.com/sbt/sbt/releases/download/v1.10.0/sbt-1.10.0.tgz" | tar xz -C /usr/local
-
 # Set working directory
 WORKDIR /app
 
@@ -24,7 +21,6 @@ COPY src src/
 
 # Set SBT_OPTS to limit memory usage
 ENV SBT_OPTS="-Xmx256m -Xms64m"
-ENV PATH="/usr/local/sbt/bin:${PATH}"
 
 # Build the project
 RUN sbt clean compile stage
@@ -35,4 +31,4 @@ EXPOSE 9000
 # Command to run the application with memory constraints
 CMD ["target/universal/stage/bin/scala-backend"]
 
-ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
+#ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
