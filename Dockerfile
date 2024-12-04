@@ -17,11 +17,14 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
+# Set SBT_OPTS to limit memory usage
+ENV SBT_OPTS="-Xmx256m -Xms64m"
+
 # Build the project
 RUN sbt clean compile
 
 # Expose port if needed
 EXPOSE 9000
 
-# Run the application
-CMD ["sbt", "run"]
+# Command to run the application with memory constraints
+CMD ["sbt", "-J-Xmx256m", "-J-Xms64m", "run"]
