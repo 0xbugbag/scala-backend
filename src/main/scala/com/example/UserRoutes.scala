@@ -37,7 +37,42 @@ class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val syst
   //#users-get-post
   //#users-get-delete
   val userRoutes: Route = corsHandler {  // Add corsHandler here
-    pathPrefix("users") {
+      concat(
+      // Root path
+      pathEndOrSingleSlash {
+        get {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,
+            """
+            |<!DOCTYPE html>
+            |<html>
+            |<head>
+            |    <title>Scala Backend API</title>
+            |    <style>
+            |        body { font-family: Arial, sans-serif; margin: 40px; }
+            |        .endpoint { background: #f4f4f4; padding: 10px; margin: 10px 0; border-radius: 4px; }
+            |    </style>
+            |</head>
+            |<body>
+            |    <h1>Scala Backend API</h1>
+            |    <p>Server is up and running! Available endpoints:</p>
+            |    <div class="endpoint">GET /health - Health check</div>
+            |    <div class="endpoint">GET /users - List all users</div>
+            |    <div class="endpoint">POST /users - Create a user</div>
+            |    <div class="endpoint">GET /users/{name} - Get user by name</div>
+            |    <div class="endpoint">DELETE /users/{name} - Delete user</div>
+            |    <p>Server Time: ${java.time.Instant.now}</p>
+            |</body>
+            |</html>
+            """.stripMargin))
+        }
+      },
+      // Add this health check route
+      path("health") {
+        get {
+          complete(StatusCodes.OK -> Map("status" -> "UP", "timestamp" -> java.time.Instant.now.toString))
+        }
+      },
+      pathPrefix("users") {
       concat(
         //#users-get-delete
         pathEnd {
