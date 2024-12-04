@@ -31,7 +31,9 @@ object Main extends App {
     }
 
   // Starting the server
-  val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
+  val host = "0.0.0.0"
+  val port = sys.env.getOrElse("PORT", "9000").toInt
+  val bindingFuture = Http().newServerAt(host, port).bind(route)
 
   bindingFuture.onComplete {
     case Success(binding) =>
