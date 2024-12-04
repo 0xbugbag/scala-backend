@@ -1,6 +1,5 @@
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
-import com.typesafe.sbt.packager.Keys._
 
 lazy val akkaHttpVersion = "10.2.10"
 lazy val akkaVersion    = "2.6.20"
@@ -42,19 +41,19 @@ lazy val root = (project in file(".")).
     // Revolver settings
     Revolver.settings,
 
-    // Docker settings
-    Docker / packageName := "scala-backend",
-    Docker / version := "latest",
-    Docker / maintainer := "0xpotchgen.ui@gmail.com",
+      // Docker settings
+    dockerBaseImage := "openjdk:11-jdk-slim",
+    dockerExposedPorts ++= Seq(9000),
+    dockerUpdateLatest := true,
 
     // Force the server to bind to 0.0.0.0
     run / fork := true,
     
     // Production settings
-    Universal / javaOptions ++= Seq(
-      "-Dpidfile.path=/dev/null",
-      "-Dplay.server.http.address=0.0.0.0",
-      s"-Dplay.server.http.port=${sys.env.getOrElse("PORT", "9000")}"
+    bashScriptExtraDefines ++= Seq(
+      s"""addJava "-Dconfig.resource=production.conf"""",
+      s"""addJava "-Dhttp.port=${sys.env.getOrElse("PORT", "9000")}"""",
+      s"""addJava "-Dhttp.address=0.0.0.0""""
     )
   )
 
