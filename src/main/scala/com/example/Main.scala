@@ -30,12 +30,13 @@ object Main extends App {
       }
     } **/
 
-  val routes = new Routes().routes
+  // Define your routes
+  val routes = new UserRoutes()(system).userRoutes  // Use UserRoutes directly
 
   // Starting the server
   val host = "0.0.0.0"
   val port = sys.env.getOrElse("PORT", "9000").toInt
-  val bindingFuture = Http().newServerAt(host, port).bind(route)
+  val bindingFuture = Http().newServerAt(host, port).bind(routes)
 
   bindingFuture.onComplete {
     case Success(binding) =>
