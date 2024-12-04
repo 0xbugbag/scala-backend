@@ -21,35 +21,38 @@ lazy val root = (project in file("."))
       "com.typesafe.akka" %% "akka-stream"              % akkaVersion,
       "ch.qos.logback"    % "logback-classic"           % "1.4.11",
 
+      // Specify the main class here
+      Compile / mainClass := Some("com.example.Main"),  // Replace with your actual main class
+
       // Test dependencies
       "com.typesafe.akka" %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion     % Test,
       "org.scalatest"     %% "scalatest"                % "3.2.17"        % Test
-    ),
-    scalacOptions ++= Seq(
-      "-deprecation",
-      "-feature",
-      "-unchecked",
-      "-Xlint",
-      "-Ywarn-dead-code",
-      "-Ywarn-numeric-widen"
-    ),
-    // Memory settings
-    javaOptions ++= Seq(
-      "-Xmx256m",
-      "-Xms64m"
-    ),
+      ),
+      scalacOptions ++= Seq(
+        "-deprecation",
+        "-feature",
+        "-unchecked",
+        "-Xlint",
+        "-Ywarn-dead-code",
+        "-Ywarn-numeric-widen"
+      ),
+      // Memory settings
+      javaOptions ++= Seq(
+        "-Xmx256m",
+        "-Xms64m"
+      ),
 
-    // Force the server to bind to 0.0.0.0
-    run / fork := true,
+      // Force the server to bind to 0.0.0.0
+      run / fork := true,
     
      // Production settings
-    Universal / javaOptions ++= Seq(
-      "-Dconfig.resource=production.conf",
-      s"-Dhttp.port=${sys.env.getOrElse("PORT", "9000")}",
-      "-Dhttp.address=0.0.0.0"
+      Universal / javaOptions ++= Seq(
+        "-Dconfig.resource=production.conf",
+        s"-Dhttp.port=${sys.env.getOrElse("PORT", "9000")}",
+        "-Dhttp.address=0.0.0.0"
+      )
     )
-  )
 
 // Ensure clean state
 onLoad in Global := (onLoad in Global).value andThen { state =>
