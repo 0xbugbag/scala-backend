@@ -29,4 +29,4 @@ EXPOSE 9000
 # Command to run the application with memory constraints
 CMD target/universal/stage/bin/scala-backend
 
-#ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
+ENV JAVA_OPTS="-Xmx256m -Xms64m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=100"
