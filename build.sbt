@@ -29,5 +29,19 @@ lazy val root = (project in file(".")).
       "-Xlint",
       "-Ywarn-dead-code",
       "-Ywarn-numeric-widen"
+    ),
+    // Memory settings
+    javaOptions ++= Seq(
+      "-Xmx256m",
+      "-Xms64m"
+    ),
+    // Force the server to bind to 0.0.0.0
+    run / fork := true,
+    
+    // Production settings
+    Universal / javaOptions ++= Seq(
+      "-Dpidfile.path=/dev/null",
+      "-Dplay.server.http.address=0.0.0.0",
+      s"-Dplay.server.http.port=${sys.env.getOrElse("PORT", "9000")}"
     )
   )
