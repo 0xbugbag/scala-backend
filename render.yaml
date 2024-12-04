@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: your-app-name
+    env: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms64m"
+    disk:
+      name: tmp
+      mountPath: /tmp
+      sizeGB: 1
