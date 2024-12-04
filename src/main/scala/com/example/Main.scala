@@ -49,6 +49,12 @@ object Main {
       Behaviors.empty
     }
 
-    ActorSystem[Nothing](rootBehavior, "scala-backend")
+    // Store the returned ActorSystem in case we need it later
+    implicit val system = ActorSystem[Nothing](rootBehavior, "scala-backend")
+
+    // Add shutdown hook
+    sys.addShutdownHook {
+      system.terminate()
+    }
   }
 }
