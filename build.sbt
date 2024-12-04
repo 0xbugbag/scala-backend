@@ -1,3 +1,6 @@
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
+import com.typesafe.sbt.packager.Keys._
+
 lazy val akkaHttpVersion = "10.2.10"
 lazy val akkaVersion    = "2.6.20"
 
