@@ -7,12 +7,12 @@ WORKDIR /app
 # Copy the local code to the container
 COPY . /app
 
-# Install sbt (Scala Build Tool) from the official sbt repository
+# Install necessary dependencies for sbt
 RUN apt-get update && apt-get install -y curl gnupg
 
-# Add the sbt repository and install sbt
+# Add the sbt repository and install sbt from the official repository
 RUN echo "deb https://repo.scala-sbt.org/sbt/debian/ /" | tee -a /etc/apt/sources.list.d/sbt.list \
-    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xE72A35B7" | tee /etc/apt/trusted.gpg.d/sbt.asc \
+    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2E7489F70127B2F7" | tee /etc/apt/trusted.gpg.d/sbt.asc \
     && apt-get update \
     && apt-get install -y sbt
 
