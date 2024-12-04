@@ -10,7 +10,7 @@ COPY . /app
 WORKDIR /app
 
 # Build your Scala project
-RUN sbt compile
+RUN sbt clean compile
 
 # Expose the port your application runs on
 EXPOSE 8080
