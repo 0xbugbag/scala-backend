@@ -36,7 +36,7 @@ class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val syst
   //#all-routes
   //#users-get-post
   //#users-get-delete
-  val userRoutes: Route =
+  val userRoutes: Route = corsHandler {  // Add corsHandler here
     pathPrefix("users") {
       concat(
         //#users-get-delete
@@ -77,4 +77,5 @@ class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val syst
       //#users-get-delete
     }
   //#all-routes
+  }
 }
