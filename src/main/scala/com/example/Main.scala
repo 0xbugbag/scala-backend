@@ -16,7 +16,7 @@ object Main extends App {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   // Define your routes
-  val route: Route =
+  /**val route: Route =
     pathPrefix("api") {
       path("hello") {
         get {
@@ -28,7 +28,9 @@ object Main extends App {
           complete(StatusCodes.OK, """{"name": "Hanum", "profession": "Data Worker"}""")
         }
       }
-    }
+    } **/
+
+  val routes = new Routes().routes
 
   // Starting the server
   val host = "0.0.0.0"
