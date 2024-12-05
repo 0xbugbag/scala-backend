@@ -62,17 +62,6 @@ class UserRoutes(userRegistry: ActorRef[UserRegistry.Command])(implicit val syst
           complete(HealthResponse("UP", java.time.Instant.now.toString))
         }
       },
-      // In your UserRoutes.scala or a new MessageRoutes.scala
-      path("messages") {
-        post {
-          entity(as[Message]) { message =>
-            complete {
-              // Handle the message (e.g., save to database, send email)
-              StatusCodes.OK -> Map("success" -> true, "message" -> "Message sent successfully")
-            }
-          }      
-        }      
-      },
       // Users routes
       pathPrefix("users") {
         concat(
